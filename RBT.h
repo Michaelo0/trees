@@ -24,61 +24,30 @@
 			this->right = nullptr;
 		}
 		
-		void info() const {
-			std::cout << this->key << "\t";
-			if (this->color == red) {
-				std::cout << "red" << "\t";
-			}
-			else if (this->color == black) {
-				std::cout << "black" << "\t";
-			}
-			if (this->left != nullptr) {
-				std::cout << this->left->key << "\t";
-			}
-			else {
-				std::cout << "null" << "\t";
-			}
-			if (this->right != nullptr) {
-				std::cout << this->right->key << "\t";
-			}
-			else {
-				std::cout << "null" << "\t";
-			}
-			if (this->parent.lock() != nullptr) {
-				std::cout << this->parent.lock()->key << std::endl;
-			}
-			else {
-				std::cout << "null" << std::endl;
-			}
-		}
 	};
 	
 	template <typename key_t, typename value_t>
 	class red_black_tree {
 	private:
 		std::shared_ptr<red_black_tree_node <key_t, value_t> > root;
-		void pre_order_traversal(std::shared_ptr<red_black_tree_node <key_t, value_t> > &x) {
-			if (x == nullptr) return;
-			x->info();
+		void pre_order_traversal(std::ostream &outputstream, std::shared_ptr<red_black_tree_node <key_t, value_t> > &x) {
+			if (!x) return;
+			outputstream << x->value << " ";
 			pre_order_traversal(x->left);
 			pre_order_traversal(x->right);
 		}
 		void in_order_traversal(std::ostream &outputstream, std::shared_ptr<red_black_tree_node <key_t, value_t> > &x)
 		{
-			if (x == nullptr) return;
+			if (!x) return;
 			in_order_traversal(outputstream, x->left);
-			outputstream << x->info();
+			outputstream << x->value << " ";
 			in_order_traversal(outputstream, x->right);
 		}
-		void post_order_traversal(std::shared_ptr<red_black_tree_node <key_t, value_t> > &x) {
-			if (x == nullptr) return;
+		void post_order_traversal(std::ostream &outputstream, std::shared_ptr<red_black_tree_node <key_t, value_t> > &x) {
+			if (!x) return;
 			post_order_traversal(x->left);
 			post_order_traversal(x->right);
-			x->info();
-		}
-		unsigned long long size(std::shared_ptr<red_black_tree_node <key_t, value_t> > &x) {
-			if (x == nullptr) return 0;
-			return size(x->left)  size(x->right)  1;
+			outputstream << x->value << " ";
 		}
 		void left_rotate(std::shared_ptr<red_black_tree_node <key_t, value_t> > &x) {
 			std::shared_ptr<red_black_tree_node <key_t, value_t> > y = x->right;
@@ -198,25 +167,20 @@
 		red_black_tree() {
 			root = nullptr;
 		}
-		~red_black_tree() {}
 	
-		void pre_order_traversal() {
-			pre_order_traversal(root);
+		void _pre_order_traversal(std::ostream &outputstream) {
+			pre_order_traversal(outputstream,root);
 		}
 		
 		void _in_order_traversal(std::ostream &outputstream) {
 			in_order_traversal(outputstream, root);
 		}
 		
-		void post_order_traversal() {
-			post_order_traversal(root);
+		void _post_order_traversal(std::ostream &outputstream) {
+			post_order_traversal(outputstream,root);
 		}
 		
-		void breadth_first_traversal() {
-			breadth_first_traversal(root);
-		}
-		
-		 const std::shared_ptr<red_black_tree_node <key_t, value_t> > insert(key_t key, value_t value) {
+		const std::shared_ptr<red_black_tree_node <key_t, value_t> > insert(key_t key, value_t value) {
 			std::shared_ptr<red_black_tree_node <key_t, value_t> > current = root;
 			std::shared_ptr<red_black_tree_node <key_t, value_t> > parent = nullptr;
 			while (current != nullptr) {
@@ -246,7 +210,7 @@
 			return current;
 		}
 		
-		 bool _remove(key_t key) {
+		bool _remove(key_t key) {
 			 red_black_tree_node <key_t, value_t> x = root;
 
 			 if (search(key) == nullptr) return false;
@@ -397,63 +361,6 @@
 			if (x == nullptr) return 0;
 			while (x->right != nullptr) x = x->right;
 			return x->value;
-		}
-		
-		const std::shared_ptr<red_black_tree_node <key_t, value_t> > successor(key_t key) {
-			std::shared_ptr<red_black_tree_node <key_t, value_t> > x = root;
-			while (x != nullptr) {
-				if (key > x->key) {
-					x = x->right;
-				}
-				else if (key < x->key) {
-					x = x->left;
-				}
-				else {
-					if (x->right != nullptr) {
-						x = x->right;
-						while (x->left != nullptr) x = x->left;
-						return x;
-					}
-					std::shared_ptr<red_black_tree_node <key_t, value_t> > parent = x->parent.lock();
-					while (parent != nullptr && x == parent->right) {
-						x = parent;
-						parent = parent->parent.lock();
-					}
-					return parent;
-				}
-			}
-			return nullptr;
-		}
-		
-		const std::shared_ptr<red_black_tree_node <key_t, value_t> > predecessor(key_t key) {
-			std::shared_ptr<red_black_tree_node <key_t, value_t> > x = root;
-			while (x != nullptr) {
-				if (key > x->key) {
-					x = x->right;
-				}
-				else if (key < x->key) {
-					x = x->left;
-				}
-				else {
-					if (x->left != nullptr) {
-						x = x->left;
-						while (x->right != nullptr) x = x->right;
-						return x;
-					}
-					std::shared_ptr<red_black_tree_node <key_t, value_t> > parent = x->parent.lock();
-					while (parent != nullptr && x == parent->left) {
-						x = parent;
-						parent = parent->parent.lock();
-					}
-					return parent;
-				}
-			}
-			return nullptr;
-		}
-		
-		
-		unsigned long long size() {
-			return size(root);
 		}
 		
 		bool empty() {

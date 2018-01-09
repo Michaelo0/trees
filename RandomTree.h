@@ -24,28 +24,6 @@ struct node {
 		
 	}
 
-	void info()  {
-		std::cout << this->key << "\t";
-		if (this->left != nullptr) {
-			std::cout << this->left->key << "\t";
-		}else {
-			std::cout << "null" << "\t";
-		}
-		
-		if (this->right != nullptr)
-		{
-			std::cout << this->right->key << "\t";
-		}else {
-			std::cout << "null" << "\t";
-		}
-
-		if (this->parent.lock() != nullptr) {
-			std::cout << this->parent.lock()->key << std::endl;
-		}else {
-			std::cout << "null" << std::endl;
-		}
-
-	}
 	};
 
 template <typename key_t, typename value_t>
@@ -54,27 +32,24 @@ class random_tree
 {
 	std::shared_ptr<node<key_t, value_t> > root;
 
-	void pre_order_traversal(std::shared_ptr<node<key_t, value_t> > &x) {
-		if (x == nullptr) return;
-		x->info();
+	void pre_order_traversal(std::ostream &outputstream, std::shared_ptr<red_black_tree_node <key_t, value_t> > &x) {
+		if (!x) return;
+		outputstream << x->value << " ";
 		pre_order_traversal(x->left);
 		pre_order_traversal(x->right);
 	}
-
-	void in_order_traversal(std::ostream &outputstream, std::shared_ptr<node<key_t, value_t> > &x)
+	void in_order_traversal(std::ostream &outputstream, std::shared_ptr<red_black_tree_node <key_t, value_t> > &x)
 	{
-		if (x == nullptr) return;
+		if (!x) return;
 		in_order_traversal(outputstream, x->left);
-		outputstream << x->info();
+		outputstream << x->value << " ";
 		in_order_traversal(outputstream, x->right);
 	}
-
-	void post_order_traversal(std::shared_ptr < node<key_t, value_t> > &x)
-	{
-		if (x == nullptr) return;
+	void post_order_traversal(std::ostream &outputstream, std::shared_ptr<red_black_tree_node <key_t, value_t> > &x) {
+		if (!x) return;
 		post_order_traversal(x->left);
 		post_order_traversal(x->right);
-		x->info();
+		outputstream << x->value << " ";
 	}
 
 	unsigned long long getsize(std::shared_ptr<node<key_t, value_t> > &x) 
@@ -82,10 +57,7 @@ class random_tree
 		if (!x) return 0;
 		return x->size;
 	}
-	///*void size(std::shared_ptr<node<key_t, value_t> > &x) {
-	//	if (x == nullptr) return 0;
-	//	x->size = size(x->left) + size(x->right) + 1;
-	//}*/
+
 	const std::shared_ptr<node <key_t, value_t> >  insert_root(std::shared_ptr<node <key_t, value_t> > &x, key_t key,value_t value)
 	{
 		if (!x) return  std::make_shared<node<key_t, value_t> >(key, value);
@@ -169,16 +141,16 @@ public:
 		root = nullptr;
 	}
 
-	void _pre_order_traversal() {
-		pre_order_traversal(root)
+	void _pre_order_traversal(std::ostream &outputstream) {
+		pre_order_traversal(outputstream, root);
 	}
 
 	void _in_order_traversal(std::ostream &outputstream) {
 		in_order_traversal(outputstream, root);
 	}
 
-	void _post_order_traversal() {
-		post_order_traversal(root)
+	void _post_order_traversal(std::ostream &outputstream) {
+		post_order_traversal(outputstream, root);
 	}
 
 	const std::shared_ptr<node<key_t, value_t> > insert(key_t key, value_t value) {
