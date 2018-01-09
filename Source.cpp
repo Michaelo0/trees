@@ -7,11 +7,65 @@
 #include <ctime>
 
 
-bool FileIsEqual(const std::string &, const std::string &);
-bool LineIsOk(const std::string &, const std::string &);
+bool LineIsOk(const std::string &s, const std::string &command) {
+	std::istringstream iss(s);
+	std::string tmp;
 
-int FindKey(const std::string &);
-int FindValue(const std::string &);
+	iss >> tmp;
+	if (tmp != command) {
+		return false;
+	}
+	tmp.clear();
+	iss >> tmp;
+
+	if (tmp.empty()) {
+		return false;
+	}
+	tmp.clear();
+	iss >> tmp;
+
+	if (tmp.empty()) {
+		return false;
+	}
+
+	tmp.clear();
+	iss >> tmp;
+
+	return tmp.empty();
+}
+bool FileIsEqual(const std::string &firstFileName, const std::string &secondFileName) {
+	std::ifstream firstFile(firstFileName), secondFile(secondFileName);
+	assert(firstFile);
+	assert(secondFile);
+
+	std::string buffer1((std::istreambuf_iterator<char>(firstFile)), std::istreambuf_iterator<char>());
+	std::string buffer2((std::istreambuf_iterator<char>(secondFile)), std::istreambuf_iterator<char>());
+	firstFile.close();
+	secondFile.close();
+
+	return (buffer1 == buffer2);
+}
+
+int FindKey(const std::string &s) {
+	std::istringstream iss(s);
+	std::string tmp;
+	iss >> tmp;
+	tmp.clear();
+	iss >> tmp;
+	int key = atoi(tmp.c_str());
+	return key;
+}
+int FindValue(const std::string &s) {
+	std::istringstream iss(s);
+	std::string tmp;
+	iss >> tmp;
+	tmp.clear();
+	iss >> tmp;
+	tmp.clear();
+	iss >> tmp;
+	int value = atoi(tmp.c_str());
+	return value;
+}
 
 
 int main(int argc, char *argv[]) {
@@ -24,7 +78,7 @@ int main(int argc, char *argv[]) {
 	std::ofstream fileOut(argv[2]);
 	assert(fileOut);
 
-	
+
 
 	random_tree<int, int> _random_tree;
 	srand(time(0));
@@ -95,27 +149,28 @@ int main(int argc, char *argv[]) {
 	fileOut.clear();
 	fileOut.seekp(0);
 
-	
 
-	red_black_tree<int,int> redBlackTree;
-	
+
+	red_black_tree<int, int> redBlackTree;
+
 	srand(time(0));
 
 	while (getline(fileIn, line)) {
 		if (line.find("delete") == 0) {
 			if (LineIsOk(line, "delete")) {
-				/*if (!redBlackTree._remove(FindKey(line))) {
+				if (!redBlackTree._remove(FindKey(line))) {
 					fileOut << "error" << std::endl;
 				}
 				else {
-					fileOut << "Ok" << std::endl;*/
+					fileOut << "Ok" << std::endl;
+				}
 			}
 		}
 		else {
 			fileOut << "error" << std::endl;
 		}
-	
-		
+
+
 		if (line == "print") {
 			redBlackTree._in_order_traversal(fileOut);
 			fileOut << std::endl;
@@ -166,64 +221,3 @@ int main(int argc, char *argv[]) {
 
 	return 0;
 }
-bool LineIsOk(const std::string &s, const std::string &command) {
-	std::istringstream iss(s);
-	std::string tmp;
-
-	iss >> tmp;
-	if (tmp != command) {
-		return false;
-	}
-	tmp.clear();
-	iss >> tmp;
-
-	if (tmp.empty()) {
-		return false;
-	}
-	tmp.clear();
-	iss >> tmp;
-
-	if (tmp.empty()) {
-		return false;
-	}
-
-	tmp.clear();
-	iss >> tmp;
-
-	return tmp.empty();
-}
-bool FileIsEqual(const std::string &firstFileName, const std::string &secondFileName) {
-	std::ifstream firstFile(firstFileName), secondFile(secondFileName);
-	assert(firstFile);
-	assert(secondFile);
-
-	std::string buffer1((std::istreambuf_iterator<char>(firstFile)), std::istreambuf_iterator<char>());
-	std::string buffer2((std::istreambuf_iterator<char>(secondFile)), std::istreambuf_iterator<char>());
-	firstFile.close();
-	secondFile.close();
-
-	return (buffer1 == buffer2);
-}
-
-int FindKey(const std::string &s) {
-	std::istringstream iss(s);
-	std::string tmp;
-	iss >> tmp;
-	tmp.clear();
-	iss >> tmp;
-	int key = atoi(tmp.c_str());
-	return key;
-}
-int FindValue(const std::string &s) {
-	std::istringstream iss(s);
-	std::string tmp;
-	iss >> tmp;
-	tmp.clear();
-	iss >> tmp;
-	tmp.clear();
-	iss >> tmp;
-	int value = atoi(tmp.c_str());
-	return value;
-}
-
-

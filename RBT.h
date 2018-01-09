@@ -211,7 +211,7 @@
 		}
 		
 		bool _remove(key_t key) {
-			 red_black_tree_node <key_t, value_t> x = root;
+			std::shared_ptr<red_black_tree_node <key_t, value_t> > x = root;
 
 			 if (search(key) == nullptr) return false;
 
@@ -235,7 +235,7 @@
 						 }
 						 else
 							  x->parent->left = nullptr;
-						 x.reset();
+							 x.reset();
 						 return true;
 						 
 					 }
@@ -290,7 +290,7 @@
 						 
 					 }
 					 else {
-						 red_black_tree_node <key_t, value_t> child = x->left;
+						 std::shared_ptr<red_black_tree_node <key_t, value_t> > child = x->left;
 						 while (child->right != nullptr)
 							  child = child->right;
 						 x->value = child->value;
