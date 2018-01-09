@@ -1,5 +1,5 @@
-#include "AAtree.h"
-#include "AVL.h"
+#include "RBT.h"
+#include "RandomTree.h"
 #include <iostream>
 #include <cassert>
 #include <sstream>
@@ -24,16 +24,15 @@ int main(int argc, char *argv[]) {
 	std::ofstream fileOut(argv[2]);
 	assert(fileOut);
 
-	/*тесты для АВЛ-дерева*/
+	
 
-	AVL<int> AVLtree;
-
+	random_tree<int, int> _random_tree;
 	srand(time(0));
 
 	while (getline(fileIn, line)) {
 		if (line.find("delete") == 0) {
 			if (LineIsOk(line, "delete")) {
-				if (!AVLtree.Delete(FindKey(line), FindValue(line))) {
+				if (!_random_tree._remove(FindKey(line))) {
 					fileOut << "error" << std::endl;
 				}
 				else {
@@ -45,12 +44,12 @@ int main(int argc, char *argv[]) {
 			}
 		}
 		if (line == "print") {
-			AVLtree.PrintInOrderTraversal(fileOut);
+			_random_tree._in_order_traversal(fileOut);
 			fileOut << std::endl;
 		}
 		if (line.find("add") == 0) {
 			if (LineIsOk(line, "add") != 0) {
-				AVLtree.insert(FindKey(line), FindValue(line));
+				_random_tree.insert(FindKey(line), FindValue(line));
 			}
 			else {
 				fileOut << "error" << std::endl;
@@ -58,7 +57,7 @@ int main(int argc, char *argv[]) {
 		}
 		if (line.find("search") == 0) {
 			if (LineIsOk(line, "search") != 0) {
-				if (!AVLtree.search(FindKey(line), FindValue(line))) {
+				if (!_random_tree.search(FindKey(line))) {
 					fileOut << "error" << std::endl;
 				}
 				else {
@@ -71,10 +70,10 @@ int main(int argc, char *argv[]) {
 			}
 		}
 		if (line == "min") {
-			fileOut << AVLtree.min() << std::endl;
+			fileOut << _random_tree.minimum() << std::endl;
 		}
 		if (line == "max") {
-			fileOut << AVLtree.max() << std::endl;
+			fileOut << _random_tree.maximum() << std::endl;
 		}
 		if (line == " ") {
 			fileOut << "error" << std::endl;
@@ -96,16 +95,16 @@ int main(int argc, char *argv[]) {
 	fileOut.clear();
 	fileOut.seekp(0);
 
-	/*тесты для АА-дерева*/
+	
 
-	AATree<int> aaTree;
+	red_black_tree<int,int> redBlackTree;
 	
 	srand(time(0));
 
 	while (getline(fileIn, line)) {
 		if (line.find("delete") == 0) {
 			if (LineIsOk(line, "delete")) {
-				if (!aaTree.Delete(FindKey(line), FindValue(line))) {
+				if (!redBlackTree._remove(FindKey(line))) {
 					fileOut << "error" << std::endl;
 				}
 				else {
@@ -117,12 +116,12 @@ int main(int argc, char *argv[]) {
 			}
 		}
 		if (line == "print") {
-			aaTree.PrintInOrderTraversal(fileOut);
+			redBlackTree._in_order_traversal(fileOut);
 			fileOut << std::endl;
 		}
 		if (line.find("add") == 0) {
 			if (LineIsOk(line, "add") != 0) {
-				aaTree.insert(FindKey(line), FindValue(line));
+				redBlackTree.insert(FindKey(line), FindValue(line));
 			}
 			else {
 				fileOut << "error" << std::endl;
@@ -130,7 +129,7 @@ int main(int argc, char *argv[]) {
 		}
 		if (line.find("search") == 0) {
 			if (LineIsOk(line, "search") != 0) {
-				if (!aaTree.search(FindKey(line), FindValue(line))) {
+				if (!redBlackTree.search(FindKey(line))) {
 					fileOut << "error" << std::endl;
 				}
 				else {
@@ -142,10 +141,10 @@ int main(int argc, char *argv[]) {
 			}
 		}
 		if (line == "min") {
-			fileOut << aaTree.min() << std::endl;
+			fileOut << redBlackTree.minimum() << std::endl;
 		}
 		if (line == "max") {
-			fileOut << aaTree.max() << std::endl;
+			fileOut << redBlackTree.maximum() << std::endl;
 		}
 		if (line == " ") {
 			fileOut << "error" << std::endl;
