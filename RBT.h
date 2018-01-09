@@ -210,7 +210,7 @@
 			return current;
 		}
 		
-		/*bool _remove(key_t key) {
+		bool _remove(key_t key) {
 			 red_black_tree_node <key_t, value_t> x = root;
 
 			 if (search(key) == nullptr) return false;
@@ -331,7 +331,7 @@
 				 
 			 }
 			 
-		 }*/
+		 }
 
 		const std::shared_ptr<red_black_tree_node <key_t, value_t> > search(key_t key) {
 			std::shared_ptr<red_black_tree_node <key_t, value_t> > x = root;

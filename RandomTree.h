@@ -32,20 +32,20 @@ class random_tree
 {
 	std::shared_ptr<node<key_t, value_t> > root;
 
-	void pre_order_traversal(std::ostream &outputstream, std::shared_ptr<red_black_tree_node <key_t, value_t> > &x) {
+	void pre_order_traversal(std::ostream &outputstream, std::shared_ptr<node <key_t, value_t> > &x) {
 		if (!x) return;
 		outputstream << x->value << " ";
 		pre_order_traversal(x->left);
 		pre_order_traversal(x->right);
 	}
-	void in_order_traversal(std::ostream &outputstream, std::shared_ptr<red_black_tree_node <key_t, value_t> > &x)
+	void in_order_traversal(std::ostream &outputstream, std::shared_ptr<node <key_t, value_t> > &x)
 	{
 		if (!x) return;
 		in_order_traversal(outputstream, x->left);
 		outputstream << x->value << " ";
 		in_order_traversal(outputstream, x->right);
 	}
-	void post_order_traversal(std::ostream &outputstream, std::shared_ptr<red_black_tree_node <key_t, value_t> > &x) {
+	void post_order_traversal(std::ostream &outputstream, std::shared_ptr<node <key_t, value_t> > &x) {
 		if (!x) return;
 		post_order_traversal(x->left);
 		post_order_traversal(x->right);
@@ -90,7 +90,7 @@ class random_tree
 		if (!x) return y;
 		if (!y) return x;
 
-		if (rand() % (x->size + y->size) < p->size)
+		if (rand() % (x->size + y->size) < x->size)
 		{
 			x->right = join(x->right, y);
 			fixsize(x);
@@ -108,16 +108,17 @@ class random_tree
 	const std::shared_ptr<node<key_t, value_t> > remove(std::shared_ptr<node<key_t, value_t> > &x, key_t key)
 	{
 		if (!x) return x;
-		if ((x->key == key) )
-		{ 
+		if ((x->key == key))
+		{
 			auto y = join(x->left, x->right);
 			x.reset();
 			return y;
 		}
-		else if(key<x->key)
-			x->left = remove(x->left,key)
-		else 
-			x->right = remove (x->right,key)
+		else if (key < x->key)
+			x->left = remove(x->left, key);
+		else
+			x->right = remove(x->right, key);
+			
 	}
 
 	const std::shared_ptr<node<key_t, value_t> > _check_node(std::shared_ptr<node<key_t, value_t> > &x, key_t key) {
@@ -153,8 +154,9 @@ public:
 		post_order_traversal(outputstream, root);
 	}
 
-	const std::shared_ptr<node<key_t, value_t> > insert(key_t key, value_t value) {
+	bool insert(key_t key, value_t value) {
 		insert_random(root, key, value);
+		return true;
 	}
 
 	const std::shared_ptr<node<key_t, value_t> > search(key_t key) {
