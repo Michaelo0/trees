@@ -173,19 +173,17 @@ public:
 
 	value_t minimum() {
 		auto x = root;
-		if (x == nullptr) return ;
 		while (x->right != nullptr) x = x->right;
 		return x->value;
 	}
 
 	value_t maximum() {
 		auto x = root;
-		if (x == nullptr) return ;
 		while (x->left != nullptr) x = x->left;
 		return x->value;
 	}
 
-
+	
 	/*void fixsize() {
 		size(root);
 	}*/
@@ -193,6 +191,7 @@ public:
 	{
 		x->size = getsize(x->left) + getsize(x->right) + 1;
 	}
+
 	void rotate_left(std::shared_ptr<node <key_t, value_t> > &x) {
 		std::shared_ptr<node <key_t, value_t> > y = x->right;
 		if (y != nullptr) {

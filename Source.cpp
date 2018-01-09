@@ -104,17 +104,18 @@ int main(int argc, char *argv[]) {
 	while (getline(fileIn, line)) {
 		if (line.find("delete") == 0) {
 			if (LineIsOk(line, "delete")) {
-				if (!redBlackTree._remove(FindKey(line))) {
+				/*if (!redBlackTree._remove(FindKey(line))) {
 					fileOut << "error" << std::endl;
 				}
 				else {
-					fileOut << "Ok" << std::endl;
-				}
-			}
-			else {
-				fileOut << "error" << std::endl;
+					fileOut << "Ok" << std::endl;*/
 			}
 		}
+		else {
+			fileOut << "error" << std::endl;
+		}
+	
+		
 		if (line == "print") {
 			redBlackTree._in_order_traversal(fileOut);
 			fileOut << std::endl;
